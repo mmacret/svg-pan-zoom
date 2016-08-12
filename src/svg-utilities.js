@@ -146,7 +146,7 @@ module.exports = {
    */
 , setCTM: function(element, matrix, defs) {
     var that = this
-      , s = 'matrix(' + matrix.a + ',' + matrix.b + ',' + matrix.c + ',' + matrix.d + ',' + matrix.e + ',' + matrix.f + ')';
+      , s = 'matrix(' + matrix.a + ',' + matrix.b + ',' + matrix.c + ',' + 1 + ',' + matrix.e + ',' + 0 + ')';
 
     element.setAttributeNS(null, 'transform', s);
 

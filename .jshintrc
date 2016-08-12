@@ -3,5 +3,6 @@
   "eqeqeq"   : true,
   "browser"  : true,
   "laxcomma" : true,
-  "curly"    : true
+  "curly"    : true,
+  "laxbreak" : false
 }

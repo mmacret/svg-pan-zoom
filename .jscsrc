@@ -1,7 +1,6 @@
 {
   "fileExtensions": [ ".js", "jscs" ],
 
-  "validateLineBreaks": "LF",
   "disallowCommaBeforeLineBreak": true,
   "maximumLineLength": null,
   "validateQuoteMarks": "'",
