@@ -105,7 +105,7 @@ ShadowViewport.prototype.getViewBox = function() {
  */
 ShadowViewport.prototype.processCTM = function() {
   var newCTM = this.getCTM()
-
+  var zoom = ((this.options.zoomDirection === 'v') ? newCTM.d : newCTM.a)
   if (this.options.fit || this.options.contain) {
     var newScale;
     if (this.options.fit) {
@@ -121,15 +121,15 @@ ShadowViewport.prototype.processCTM = function() {
   }
 
   if (this.options.center) {
-    var offsetX = (this.options.width - (this.viewBox.width + this.viewBox.x * 2) * newCTM.a) * 0.5
-      , offsetY = (this.options.height - (this.viewBox.height + this.viewBox.y * 2) * newCTM.a) * 0.5
+    var offsetX = (this.options.width - (this.viewBox.width + this.viewBox.x * 2) * zoom) * 0.5
+      , offsetY = (this.options.height - (this.viewBox.height + this.viewBox.y * 2) * zoom) * 0.5
 
     newCTM.e = offsetX
     newCTM.f = offsetY
   }
 
   // Cache initial values. Based on activeState and fix+center opitons
-  this.originalState.zoom = newCTM.a
+  this.originalState.zoom = zoom
   this.originalState.x = newCTM.e
   this.originalState.y = newCTM.f
 
@@ -206,7 +206,15 @@ ShadowViewport.prototype.getCTM = function() {
   safeCTM.d = this.activeState.zoom
   safeCTM.e = this.activeState.x
   safeCTM.f = this.activeState.y
-
+  
+  if(this.options.zoomDirection === 'h'){
+    safeCTM.d =1;
+    safeCTM.f =0;
+  }
+  else if(this.options.zoomDirection === 'v'){
+    safeCTM.a =1;
+    safeCTM.e =0;
+  }
   return safeCTM
 }
 
@@ -218,12 +226,12 @@ ShadowViewport.prototype.getCTM = function() {
 ShadowViewport.prototype.setCTM = function(newCTM) {
   var willZoom = this.isZoomDifferent(newCTM)
     , willPan = this.isPanDifferent(newCTM)
-
+    , zoom = ((this.options.zoomDirection === 'v') ?  newCTM.d : newCTM.a)
   if (willZoom || willPan) {
     // Before zoom
     if (willZoom) {
       // If returns false then cancel zooming
-      if (this.options.beforeZoom(this.getRelativeZoom(), this.computeRelativeZoom(newCTM.a)) === false) {
+      if (this.options.beforeZoom(this.getRelativeZoom(), this.computeRelativeZoom(zoom)) === false) {
         newCTM.a = newCTM.d = this.activeState.zoom
         willZoom = false
       }
@@ -285,7 +293,8 @@ ShadowViewport.prototype.setCTM = function(newCTM) {
 }
 
 ShadowViewport.prototype.isZoomDifferent = function(newCTM) {
-  return this.activeState.zoom !== newCTM.a
+  var zoom = ((this.options.zoomDirection === 'v') ? newCTM.d : newCTM.a)
+  return this.activeState.zoom !== zoom
 }
 
 ShadowViewport.prototype.isPanDifferent = function(newCTM) {
@@ -299,7 +308,8 @@ ShadowViewport.prototype.isPanDifferent = function(newCTM) {
  * @param {SVGMatrix} newCTM
  */
 ShadowViewport.prototype.updateCache = function(newCTM) {
-  this.activeState.zoom = newCTM.a
+  var zoom = ((this.options.zoomDirection === 'v') ? newCTM.d : newCTM.a)
+  this.activeState.zoom = zoom
   this.activeState.x = newCTM.e
   this.activeState.y = newCTM.f
 }
