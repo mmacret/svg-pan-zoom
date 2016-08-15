@@ -510,6 +510,7 @@ var optionsDefaults = {
 , zoomDirection: 'both' // set zoom direction (h/v/both) (default both)
 , dblClickZoomEnabled: true // enable or disable zooming by double clicking (default enabled)
 , mouseWheelZoomEnabled: true // enable or disable zooming by mouse wheel (default enabled)
+, mouseWheelAltKey: true
 , preventMouseEventsDefault: true // enable or disable preventDefault for mouse events
 , zoomScaleSensitivity: 0.1 // Zoom sensitivity
 , minZoom: 0.5 // Minimum Zoom level
@@ -702,7 +703,9 @@ SvgPanZoom.prototype.init = function(svg, options) {
  * @param  {Event} evt
  */
  SvgPanZoom.prototype.handleMouseWheel = function(evt) {
-  if (!this.options.zoomEnabled || this.state !== 'none') {
+  var altKey =  this.options.mouseWheelAltKey && !evt.altKey;
+  
+  if (!this.options.zoomEnabled || this.state !== 'none' || altKey ) {
     return;
   }
 
