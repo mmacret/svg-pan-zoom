@@ -195,6 +195,14 @@ SvgPanZoom.prototype.addMouseWheelZoom = function(element,zoomDirection) {
 
 
 /**
+ * Remove mouse wheel listener. 
+ */
+SvgPanZoom.prototype.removeMouseWheelZoom = function(element,zoomDirection) {
+    Wheel.off(element, wheelListener, false)
+}
+
+
+/**
  * Enable ability to zoom using mouse wheel
  */
  SvgPanZoom.prototype.enableMouseWheelZoom = function() {
@@ -688,6 +696,7 @@ SvgPanZoom.prototype.addMouseWheelZoom = function(element,zoomDirection) {
       , getZoomDirection: function(){return that.options.zoomDirection}
       , setZoomDirection: function(zoomDirection){that.options.zoomDirection = zoomDirection;that.viewport.options.zoomDirection = zoomDirection;}
       , addMouseWheelZoom: function(element,direction){that.addMouseWheelZoom(element,direction);}
+      , removeMouseWheelZoom: function(element,direction){that.removeMouseWheelZoom(element,direction);}
       , enableControlIcons: function() {
         if (!that.options.controlIconsEnabled) {
           that.options.controlIconsEnabled = true
