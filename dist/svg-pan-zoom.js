@@ -510,7 +510,7 @@ var optionsDefaults = {
 , zoomDirection: 'both' // set zoom direction (h/v/both) (default both)
 , dblClickZoomEnabled: true // enable or disable zooming by double clicking (default enabled)
 , mouseWheelZoomEnabled: true // enable or disable zooming by mouse wheel (default enabled)
-, mouseWheelAltKey: true
+, mouseWheelAltKey: false //enable required alt key for zooming by mouse wheel
 , preventMouseEventsDefault: true // enable or disable preventDefault for mouse events
 , zoomScaleSensitivity: 0.1 // Zoom sensitivity
 , minZoom: 0.5 // Minimum Zoom level
@@ -668,6 +668,26 @@ SvgPanZoom.prototype.init = function(svg, options) {
   }
 }
 
+
+/**
+ * Add mouse wheel listener
+ */
+SvgPanZoom.prototype.addMouseWheelZoom = function(element,zoomDirection) {
+    var that = this
+    var dir = zoomDirection;
+    // Mouse wheel listener
+    var wheelListener = function(evt) {
+      that.publicInstance.setZoomDirection(dir);
+      return that.handleMouseWheel(evt);
+    }
+
+    // Bind wheelListener
+    Wheel.on(element, wheelListener, false)
+
+    return wheelListener
+}
+
+
 /**
  * Enable ability to zoom using mouse wheel
  */
@@ -676,12 +696,7 @@ SvgPanZoom.prototype.init = function(svg, options) {
     var that = this
 
     // Mouse wheel listener
-    this.wheelListener = function(evt) {
-      return that.handleMouseWheel(evt);
-    }
-
-    // Bind wheelListener
-    Wheel.on(this.options.eventsListenerElement || this.svg, this.wheelListener, false)
+    this.wheelListener = this.addMouseWheelZoom(this.options.eventsListenerElement || this.svg,'both')
 
     this.options.mouseWheelZoomEnabled = true
   }
@@ -1159,6 +1174,7 @@ SvgPanZoom.prototype.init = function(svg, options) {
       , isZoomEnabled: function() {return !!that.options.zoomEnabled}
       , getZoomDirection: function(){return that.options.zoomDirection}
       , setZoomDirection: function(zoomDirection){that.options.zoomDirection = zoomDirection;that.viewport.options.zoomDirection = zoomDirection;}
+      , addMouseWheelZoom: function(element,direction){that.addMouseWheelZoom(element,direction);}
       , enableControlIcons: function() {
         if (!that.options.controlIconsEnabled) {
           that.options.controlIconsEnabled = true

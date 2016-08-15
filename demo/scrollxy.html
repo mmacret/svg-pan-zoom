@@ -7,26 +7,13 @@
 
   <body>
     <h1>Demo for svg-pan-zoom: SVG in HTML 'embed' element</h1>
+    <div>
+    <div id="right-tab" style="width: 200px; height: 800px; background-color: red; display: inline-block;"></div>
     <embed id="demo-tiger" type="image/svg+xml" style="width: 1000px; height: 800px; border:1px solid black; " src="tiger.svg" />
-    <select onchange="selectZoomDir(this.value)">
-      <option value="both" selected="selected">Both</option>
-  <option value="horizontal">Horizontal</option>
-  <option value="vertical">Vertical</option>
-  
-
-</select>
+  </div>
+   
     <script>
       // Don't use window.onLoad like this in production, because it can only listen to one function.
-      var panZoomTiger;
-
-      function selectZoomDir(zoomDir){
-        if(zoomDir == "horizontal")
-          panZoomTiger.setZoomDirection("h");
-        else if(zoomDir == "vertical")
-          panZoomTiger.setZoomDirection("v");
-        else
-          panZoomTiger.setZoomDirection("both");
-      }
 
       window.onload = function() {
          panZoomTiger = svgPanZoom('#demo-tiger', {
@@ -34,9 +21,16 @@
           controlIconsEnabled: true,
           fit: false,
           panEnabled: false,
-          zoomDirection: 'both'
+          zoomDirection: 'both',
+          mouseWheelZoomEnabled: false,
+          mouseWheelAltKey: true
         });
+         panZoomTiger.addMouseWheelZoom(document.getElementById("right-tab"),'v');
+         panZoomTiger.addMouseWheelZoom(document.getElementById("demo-tiger").getSVGDocument(),'h');
+
+
       };
+
 
     </script>
 
