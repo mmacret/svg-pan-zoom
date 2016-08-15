@@ -176,7 +176,7 @@ SvgPanZoom.prototype.init = function(svg, options) {
 
 
 /**
- * Add mouse wheel listener
+ * Add mouse wheel listener. You are responsible for removing the listener when not needed anymore.
  */
 SvgPanZoom.prototype.addMouseWheelZoom = function(element,zoomDirection) {
     var that = this
@@ -224,7 +224,14 @@ SvgPanZoom.prototype.addMouseWheelZoom = function(element,zoomDirection) {
  * @param  {Event} evt
  */
  SvgPanZoom.prototype.handleMouseWheel = function(evt) {
-  var altKey =  this.options.mouseWheelAltKey && !evt.altKey;
+  var keyEvent;
+  if(typeof evt.altKey === 'undefined'){
+    keyEvent = evt.originalEvent;
+  }
+  else{
+    keyEvent = evt;
+  }
+  var altKey =  this.options.mouseWheelAltKey && !(keyEvent.altKey || (keyEvent.ctrlKey && keyEvent.shiftKey));
   
   if (!this.options.zoomEnabled || this.state !== 'none' || altKey ) {
     return;
